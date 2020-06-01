@@ -12,3 +12,11 @@ header h1 {
   margin: 1rem;
   text-align: center;
 }
+
+.error {
+  color: red;
+}
+
+.created {
+  text-align: center;
+}

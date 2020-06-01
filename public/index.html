@@ -12,16 +12,19 @@
     <h1>cdg.sh - Short urls for your code garden</h1>
   </header>
   <main id="app">
-    <form @submit.prevent="createUrl()">
+    <form v-if="formVisible" @submit.prevent="createUrl()">
+      <div v-if="error" class="error">
+        {{error}}
+      </div>
       <label for="url">Url</label>
       <input v-model="url" name="url" id="url">
       <label for="slug">Slug</label>
       <input v-model="slug" name="slug" id="slug">
       <button type="submit">Create</button>
     </form>
-    <pre v-if="created">
-      {{JSON.stringify(created, null, 2)}}
-    </pre>
+    <div v-if="created">
+      <p class="created">Your short url is: <a :href="created">{{created}}</a></p>
+    </div>
   </main>
   <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
   <script src="app.js"></script>

@@ -3,10 +3,13 @@ const app = new Vue({
   data: {
     url: '',
     slug: '',
+    error: '',
+    formVisible: true,
     created: null,
   },
   methods: {
     async createUrl() {
+      this.error = '';
       const response = await fetch('/url', {
         method: 'POST',
         headers: {
@@ -14,10 +17,16 @@ const app = new Vue({
         },
         body: JSON.stringify({
           url: this.url,
-          slug: this.slug
+          slug: this.slug || undefined
         })
       });
-      this.created = await response.json();
+      const result = await response.json();
+      if (response.ok) {
+        this.formVisible = false;
+        this.created = `https://cdg.sh/${result.slug}`;
+      } else {
+        this.error = result.message;
+      }
     }
   }
 })
