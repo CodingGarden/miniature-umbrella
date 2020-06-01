@@ -25,11 +25,11 @@ app.get('/:id', async (req, res, next) => {
   try {
     const url = await urls.findOne({ slug });
     if (url) {
-      res.redirect(url.url);
+      return res.redirect(url.url);
     }
-    res.redirect(`/?error=${slug} not found`);
+    return res.redirect(`/?error=${slug} not found`);
   } catch (error) {
-    res.redirect(`/?error=Link not found`);
+    return res.redirect(`/?error=Link not found`);
   }
 });
 
