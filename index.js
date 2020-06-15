@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const yup = require('yup');
 const monk = require('monk');
 const rateLimit = require('express-rate-limit');
+const slowDown = require('express-slow-down');
 const { nanoid } = require('nanoid');
 
 require('dotenv').config();
@@ -43,8 +44,12 @@ const schema = yup.object().shape({
   url: yup.string().trim().url().required(),
 });
 
-app.post('/url', rateLimit({
-  windowMs: 30 * 1000, // 30 seconds
+app.post('/url', slowDown({
+  windowMs: 30 * 1000,
+  delayAfter: 1,
+  delayMs: 500,
+}), rateLimit({
+  windowMs: 30 * 1000,
   max: 1,
 }), async (req, res, next) => {
   let { slug, url } = req.body;
