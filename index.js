@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const yup = require('yup');
 const monk = require('monk');
+const rateLimit = require('express-rate-limit');
 const { nanoid } = require('nanoid');
 
 require('dotenv').config();
@@ -14,6 +15,7 @@ const urls = db.get('urls');
 urls.createIndex({ slug: 1 }, { unique: true });
 
 const app = express();
+app.enable('trust proxy');
 
 app.use(helmet());
 app.use(morgan('tiny'));
@@ -41,7 +43,10 @@ const schema = yup.object().shape({
   url: yup.string().trim().url().required(),
 });
 
-app.post('/url', async (req, res, next) => {
+app.post('/url', rateLimit({
+  windowMs: 30 * 1000, // 30 seconds
+  max: 1,
+}), async (req, res, next) => {
   let { slug, url } = req.body;
   try {
     await schema.validate({
@@ -49,7 +54,7 @@ app.post('/url', async (req, res, next) => {
       url,
     });
     if (url.includes('cdg.sh')) {
-      throw new Error('Stop it. 🛑')
+      throw new Error('Stop it. 🛑');
     }
     if (!slug) {
       slug = nanoid(5);
@@ -84,7 +89,7 @@ app.use((error, req, res, next) => {
   res.json({
     message: error.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack,
-  })
+  });
 });
 
 const port = process.env.PORT || 1337;
