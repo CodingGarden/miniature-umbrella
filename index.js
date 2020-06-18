@@ -56,7 +56,7 @@ app.post('/url', slowDown({
       slug,
       url,
     });
-    if (url.includes('cdg.sh')) {
+    if (url.toLowerCase().includes('cdg.sh')) {
       throw new Error('Stop it. 🛑');
     }
     if (!slug) {
