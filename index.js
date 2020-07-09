@@ -50,9 +50,9 @@ app.post('/url', slowDown({
   windowMs: 30 * 1000,
   max: 1,
 }), async (req, res, next) => {
-  throw new Error('Url shortening is no longer open to the public.');
   let { slug, url } = req.body;
   try {
+    throw new Error('Url shortening is no longer open to the public.');
     await schema.validate({
       slug,
       url,
