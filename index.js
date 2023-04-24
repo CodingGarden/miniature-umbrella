@@ -27,7 +27,7 @@ const notFoundPath = path.join(__dirname, 'public/404.html');
 app.get('/:id', async (req, res, next) => {
   const { id: slug } = req.params;
   try {
-    const url = await urls.findOne({ slug });
+    const url = await urls.findOne({ slug: slug.toLowerCase() });
     if (url) {
       return res.redirect(url.url);
     }
