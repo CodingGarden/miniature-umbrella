@@ -24,6 +24,10 @@ app.use(express.static('./public'));
 
 const notFoundPath = path.join(__dirname, 'public/404.html');
 
+app.get('/v/:searchTerm', (req, res, next) => {
+  res.redirect(`https://coding.garden/videos/#/?filter=` + req.params.searchTerm);
+});
+
 app.get('/:id', async (req, res, next) => {
   const { id: slug } = req.params;
   try {
